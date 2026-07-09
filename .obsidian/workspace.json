@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "JavaScript CSS HTML/QWebEngine における touch-action とブラウザジェスチャ制御.md",
+                "file": "Qt/QWebEngine から IME をリセットする方法.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "QWebEngine における touch-action とブラウザジェスチャ制御"
+              "title": "QWebEngine から IME をリセットする方法"
             }
           }
         ]
@@ -182,9 +182,9 @@
   },
   "active": "36e9a32bb94d0a38",
   "lastOpenFiles": [
+    "JavaScript CSS HTML/QWebEngine における touch-action とブラウザジェスチャ制御.md",
     "QWebEngine から IME をリセットする方法.md",
     "Qt/QWebEngine から IME をリセットする方法.md",
-    "JavaScript CSS HTML/QWebEngine における touch-action とブラウザジェスチャ制御.md",
     "README.md",
     "無題のフォルダ",
     "JavaScript CSS HTML",
