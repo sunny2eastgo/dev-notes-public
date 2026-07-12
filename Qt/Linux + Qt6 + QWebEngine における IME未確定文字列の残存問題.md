@@ -329,7 +329,6 @@ private:
 #include <QDebug>
 #include <QGuiApplication>
 #include <QInputMethod>
-#include <QTimer>
 
 ImeBridge::ImeBridge(QObject *parent)
     : QObject(parent)
@@ -343,35 +342,27 @@ void ImeBridge::resetInputMethod()
      * resetを何度も予約しないようにする。
      */
     if (m_resetScheduled) {
-        qDebug() << "[IME] reset already scheduled";
-        return;
+            return;
     }
 
     m_resetScheduled = true;
 
-    /*
-     * QWebChannelの呼び出し処理中にはresetせず、
-     * 現在のWeb/Qtイベント処理を抜けてから実行する。
-     */
-    QTimer::singleShot(0, this, [this]() {
-        m_resetScheduled = false;
+	/*
+	 * Qt::QueuedConnection は呼び出しをイベントとしてキューへ積み、
+	 * 対象オブジェクトが属するスレッドのイベントループに戻った後で実行
+	 */
+    QMetaObject::invokeMethod(
+        this,
+        [this] {
+            m_resetScheduled = false;
 
-        QInputMethod *inputMethod = QGuiApplication::inputMethod();
-
-        if (!inputMethod) {
-            qWarning() << "[IME] QInputMethod is not available";
-            return;
-        }
-
-        qDebug() << "[IME] before reset"
-                 << "focusObject=" << QGuiApplication::focusObject()
-                 << "visible=" << inputMethod->isVisible()
-                 << "locale=" << inputMethod->locale();
-
-        inputMethod->reset();
-
-        qDebug() << "[IME] QInputMethod::reset() completed";
-    });
+			if (QInputMethod *inputMethod =
+				QGuiApplication::inputMethod())
+			{
+                inputMethod->reset();
+            }
+        },
+        Qt::QueuedConnection);
 }
 ```
 
@@ -438,6 +429,7 @@ export function initializeWebChannel() {
 #### `ime-controller.js`
 
 ```JavaScript
+/* WebChannelの初期化モジュールをimport */
 import { initializeWebChannel } from "./web-channel.js";
 
 let imeBridge = null;
